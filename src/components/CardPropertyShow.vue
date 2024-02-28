@@ -51,7 +51,7 @@ export default {
   methods: {
     async fetchPropertyDetails() {
       const propertyId = this.$route.params.id;
-      console.log("Show");
+      // console.log("Show");
       try {
         const response = await axios.get(`http://localhost:8000/api/property/${propertyId}`);
         this.property = response.data;

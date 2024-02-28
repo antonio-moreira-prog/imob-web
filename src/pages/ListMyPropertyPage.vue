@@ -1,12 +1,12 @@
 <template>
-  <q-page class="flex flex-center">
-    <CardList />
+  <q-page class="flex flex-center" >
+    <CardList  />
   </q-page>
 </template>
 
 <script>
 import { defineComponent } from 'vue'
-import CardList from "../components/CardProperty.vue";
+import CardList from "../components/MyCardProperty.vue";
 export default defineComponent({
   name: 'DashboardPage'
 ,

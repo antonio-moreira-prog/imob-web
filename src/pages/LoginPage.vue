@@ -68,27 +68,13 @@ export default defineComponent ({
 
     const email = ref('');
     const password = ref('');
-
-
-    // if($q.cookies.has('_myapp_token')){
-    //   $q.cookies.remove('_myapp_token'); //Para remover o cookie
-    // }
-
+    const error = ref('');
 
     const login = () => {
       const payload = {
         email: email.value,
         password: password.value
       };
-
-
-      // if (email.value === '' || password.value === '') {
-      //   $q.notify({
-      //     color: 'negative',
-      //     message: 'Por favor, preencha todos os campos.'
-      //   });
-      //   return;
-      // }
 
       fetch(`http://127.0.0.1:8000/api/login`, {
         method: 'POST',
@@ -98,21 +84,32 @@ export default defineComponent ({
         },
         body: JSON.stringify(payload)
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to login');
+        }
+        return response.json();
+      })
       .then(res => {
         $q.cookies.set('_myapp_token', res.access_token, { expires: 1 }); // Cookie de 1 dia
+        router.push('/dashboard');
+      })
+      .catch(error => {
+        console.error('Failed to login:', error);
+        error.value = 'Failed to login. Please check your credentials and try again.';
       });
-      router.push('/dashboard');
     };
 
     return {
       email,
       password,
+      error,
       login
     };
   }
 });
 </script>
+
 
 <style scoped>
 .my_card {

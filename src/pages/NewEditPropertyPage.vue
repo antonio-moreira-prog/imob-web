@@ -26,7 +26,7 @@
             :multiple-accept="false"
           />
           <q-btn class="full-width q-mb-md btn-custom" size="md" color="brand" type="submit" label="Cadastrar Imóvel" />
-          <q-btn v-if="editMode" class="full-width q-mb-md btn-custom" size="md" color="brand" @click="updateProperty" label="Atualizar Imóvel" />
+
         </q-form>
       </q-page-section>
     </q-page-container>
@@ -35,12 +35,20 @@
 
 <script>
 import axios from "axios";
+import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
 
 export default {
   name: "newEditProperty",
+  setup() {
+    const $q = useQuasar();
+
+    return { $q };
+  },
+
   data() {
     return {
-       editMode: false,
+      editMode: false,
       result: [],
       novoImovel: {
         title: "",
@@ -65,37 +73,25 @@ export default {
     console.log("mounted() called...");
   },
   methods: {
-    PropertyLoad() {
-    const propertyId = this.$route.params.id;
-    console.log(propertyId);
 
-    const page = "http://localhost:8000/api/edit/property/" + propertyId;
-
-    axios.get(page)
-      .then(response => {
-        console.log(response.data);
-        this.novoImovel.title = response.data.title;
-        this.novoImovel.address = response.data.address;
-        this.novoImovel.price = response.data.price;
-        this.novoImovel.area = response.data.area;
-        this.novoImovel.bedrooms = response.data.bedrooms;
-        this.novoImovel.bathrooms = response.data.bathrooms;
-        this.novoImovel.description = response.data.description;
-        this.novoImovel.city = response.data.city;
-        this.novoImovel.state = response.data.state;
-        this.novoImovel.zip = response.data.zip;
-        this.novoImovel.image = response.data.image;
-      })
-      .catch(error => {
-        console.error('Erro ao carregar dados do imóvel:', error);
-      });
-
-    },
     async createProperty() {
+      // pegar cookies
+
+      const token = this.$q.cookies.get('_myapp_token');
+      // console.log(token);
       try {
         var page = "http://localhost:8000/api/edit/property";
-        const response = await axios.post(page, this.novoImovel);
-        console.log(response);
+
+        const response = await axios.post(page, this.novoImovel, {
+          method: 'POST',
+          headers: {
+            Authorization:  'Bearer ' +  token,
+            'Content-Type': 'application/json'
+          }
+        });
+
+
+        // console.log(response);
         this.PropertyLoad();
         this.clearFields();
         alert("Propriedade criada");
@@ -116,21 +112,46 @@ export default {
       this.novoImovel.zip = "";
       this.novoImovel.image = null;
     },
-    async updateProperty() {
-  try {
-    var edit = "http://localhost:8000/api/edit/property/" + this.$route.params.id;
-    const response = await axios.put(edit, this.novoImovel);
-    console.log();
-    this.PropertyLoad();
-    this.clearFields();
-    alert("Propriedade atualizada");
-  } catch (error) {
-    console.log(error);
-  }
-},
+    async PropertyLoad() {
+      const token = this.$q.cookies.get('_myapp_token');
+      const propertyId = this.$route.params.id;
+      const page = "http://localhost:8000/api/edit/property/" + propertyId;
+
+
+
+
+
+      axios.get(page, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      // console.log(response.data);
+      this.novoImovel.title = response.data.title;
+      this.novoImovel.address = response.data.address;
+      this.novoImovel.price = response.data.price;
+      this.novoImovel.area = response.data.area;
+      this.novoImovel.bedrooms = response.data.bedrooms;
+      this.novoImovel.bathrooms = response.data.bathrooms;
+      this.novoImovel.description = response.data.description;
+      this.novoImovel.city = response.data.city;
+      this.novoImovel.state = response.data.state;
+      this.novoImovel.zip = response.data.zip;
+      this.novoImovel.image = response.data.image;
+    })
+    .catch(error => {
+      console.error('Erro ao carregar dados do imóvel:', error);
+    });
+
+
+
+
+    },
   },
 };
 </script>
+
 
 <style scoped>
 .bg-brand {

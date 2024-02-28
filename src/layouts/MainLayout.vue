@@ -15,14 +15,6 @@
         </q-toolbar-title>
         <q-space/>
         <div class="q-gutter-sm row items-center no-wrap">
-
-          <q-btn round dense flat color="white" icon="fab fa-github" type="a"
-                 href="" target="_blank">
-          </q-btn>
-          <q-btn round dense flat style="color:red !important;" type="a"
-                 target="_blank">
-            <i class="fa fa-heart fa-2x fa-beat"></i>
-          </q-btn>
           <q-btn round dense flat color="white" icon="notifications">
             <q-badge color="red" text-color="white" floating>
               5
@@ -42,29 +34,15 @@
             <div class="q-gutter-x-sm">
               <q-btn round color="white">
                 <q-avatar size="40px" >
-                  <img src="../assets/images/Foto3.png" />
+                  <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
                 </q-avatar>
               </q-btn>
             </div>
           </q-btn>
-
-          <q-list>
-            <q-menu>
-              <q-item>
-                <q-item-section avatar >
-                  <q-avatar size="40px" round color="white">
-                    <img src="../assets/images/Foto3.png" />
-                  </q-avatar>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>
-                    Ant
-                  </q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-menu>
-          </q-list>
-
+          <q-btn @click="logout" color="red">
+                <q-icon name="logout"></q-icon>
+                <span>Sair</span>
+          </q-btn>
 
         </div>
       </q-toolbar>
@@ -95,7 +73,7 @@
                 <q-icon name="list"/>
               </q-item-section>
               <q-item-section>
-                <q-item-label>LISTAR IMÓVEIS</q-item-label>
+                <q-item-label>LISTAR MEUS IMÓVEIS</q-item-label>
               </q-item-section>
             </q-item>
             <q-item to="/edit/property" active-class="q-item-no-link-highlighting">
@@ -234,34 +212,58 @@
 </template>
 
 <script>
-// import EssentialLink from '../EssentialLink.vue'
-import Messages from "./Messages.vue";
-
-import {defineComponent, ref} from 'vue'
-import {useQuasar} from "quasar";
+import { defineComponent, ref } from 'vue'
+import { Loading, useQuasar } from 'quasar'
+import axios from 'axios';
+import { route } from 'quasar/wrappers';
 
 export default defineComponent({
   name: 'MainLayout',
 
-  components: {
-    // EssentialLink,
-    Messages
-  },
-
   setup() {
     const leftDrawerOpen = ref(false)
-    const $q = useQuasar()
+    const $q = useQuasar(); // Use o hook useQuasar para acessar $q
+
+    const logout = async () => {
+    // console.log("Oi");
+
+  const token = $q.cookies.get('_myapp_token');
+
+  try {
+    const page = 'http://localhost:8000/api/logout';
+    const response = await axios.post(page, null, {
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.status === 200) {
+      $q.cookies.remove('_myapp_user_id');
+      $q.cookies.remove('_myapp_token');
+      window.location.reload();
+
+      // redirecionar para home
+
+    }
+  } catch (error) {
+    console.error('Error logging out:', error);
+  }
+}
 
     return {
       $q,
       leftDrawerOpen,
+      logout,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value
       }
     }
   }
 })
+
 </script>
+
 
 <style>
 
