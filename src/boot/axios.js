@@ -1,33 +1,9 @@
-import { boot } from 'quasar/wrappers'
-import axios from 'axios'
-
-// Be careful when using SSR for cross-request state pollution
-// due to creating a Singleton instance here;
-// If any client changes this (global) instance, it might be a
-// good idea to move this instance creation inside of the
-// "export default () => {}" function below (which runs individually
-// for each client)
-// const api = axios.create({ baseURL: 'https://api.example.com' })
-
-// export default boot(({ app }) => {
-//   // for use inside Vue files (Options API) through this.$axios and this.$api
-
-//   app.config.globalProperties.$axios = axios
-//   // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
-//   //       so you won't necessarily have to import axios in each vue file
-
-//   app.config.globalProperties.$api = api
-//   // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
-//   //       so you can easily perform requests against your app's API
-// })
-
-// export { api }
-
-/* eslint-disable no-param-reassign */
+import { boot } from 'quasar/wrappers';
+import axios from 'axios';
 import { useQuasar } from 'quasar';
-// import { $toast } from "vuetify-snackbar-toast";
-import { useRouter } from 'quasar';
+import { useRouter } from 'vue-router'; // Certifique-se de instalar e importar do 'vue-router'
 
+// Função para obter o token CSRF
 function getCsrfToken() {
   const cookieList = document.cookie.split(";").filter((str) => str.includes("csrftoken"));
   if (cookieList.length > 0) {
@@ -37,7 +13,7 @@ function getCsrfToken() {
   return null;
 }
 
-export default () => {
+export default boot(({ app }) => {
   const $q = useQuasar();
   const $router = useRouter();
   const myAppToken = $q.cookies.get('_myapp_token');
@@ -55,8 +31,11 @@ export default () => {
     (response) => response,
     (error) => {
       if (error.response && error.response.status === 401 && myAppToken) {
-        $toast.warn("Sua sessão expirou");
-        const currentRouteName = $router.currentRoute.name;
+        $q.notify({
+          type: 'warning',
+          message: 'Sua sessão expirou'
+        });
+        const currentRouteName = $router.currentRoute.value.name; // Para Vue Router 4
         if (currentRouteName !== "login" && currentRouteName !== "logout") {
           $router.push({ name: "logout" });
         }
@@ -72,5 +51,9 @@ export default () => {
     }
   );
 
+  // Configurar propriedades globais
+  app.config.globalProperties.$axios = axios;
+  app.config.globalProperties.$api = customInstance;
+
   return customInstance;
-};
+});
