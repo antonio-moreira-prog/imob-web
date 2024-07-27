@@ -1,9 +1,9 @@
 import Home from 'pages/HomePage.vue'
 import LoginPage from 'pages/LoginPage.vue'
 import PropertyPage from 'pages/PropertyPage.vue'
-import  CarouselSlide from  '../components/CarouselSlide.vue'
-import NewEditPropertyPage from 'pages/NewEditPropertyPage.vue'
-import ListMyPropertyPage from 'pages/ListMyPropertyPage.vue'
+// import  CarouselSlide from  '../components/CarouselSlide.vue'
+// import NewEditPropertyPage from 'pages/NewEditPropertyPage.vue'
+// import ListMyPropertyPage from 'pages/ListMyPropertyPage.vue'
 import Guard from '../Services/middleware.js'
 
 const routes = [

@@ -1,5 +1,5 @@
-<template>
-  <q-page class="flex flex-center">
+<template class="bg-brand">
+  <q-page class="flex flex-center bg-brand  text-white" padding>
     <CardList />
   </q-page>
 </template>
@@ -20,7 +20,7 @@ export default defineComponent({
 
 <style scoped>
 .bg-brand {
-  background: #010326;
+  background: #15141b;
 }
 
 .my-card {

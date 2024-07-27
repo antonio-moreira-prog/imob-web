@@ -19,8 +19,8 @@
       </q-card-section>
       <q-separator />
       <q-card-actions vertical>
-        <q-btn style="border-radius: 8px; padding: 2% 0 2% 0; font-size: 14pt;" color="brand" @click="$router.push('/property/' + property.id)">Ver</q-btn>
-        <q-btn style="border-radius: 8px; padding: 2% 0 2% 0; font-size: 14pt;" color="primary" icon="edit" @click="$router.push('/edit/property/' + property.id)">Editar</q-btn>
+        <q-btn style="border-radius: 8px; padding: 2% 0 2% 0; font-size: 14pt;" color="brand" @click="goToProperty(property.id)">Ver</q-btn>
+        <q-btn style="border-radius: 8px; padding: 2% 0 2% 0; font-size: 14pt;" color="primary" icon="edit" @click="goToEditProperty(property.id)">Editar</q-btn>
         <q-btn style="border-radius: 8px; padding: 2% 0 2% 0; font-size: 14pt;" color="red" icon="delete">Deletar</q-btn>
       </q-card-actions>
     </q-card>
@@ -32,30 +32,25 @@
 
 <script>
 import axios from 'axios';
+import { ref, onMounted } from 'vue';
 
 export default {
   name: 'MyCardProperty',
-  data() {
-    return {
-      userProperties: [],
-      loggedInUserId: null
-    };
-  },
-  created() {
-    this.fetchLoggedInUserId();
-  },
-  methods: {
-    async fetchUserProperties() {
+  setup() {
+    const userProperties = ref([]);
+    const loggedInUserId = ref(null);
+
+    const fetchUserProperties = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/listmyproperty');
-        this.userProperties = response.data.filter(property => property.user_id === this.loggedInUserId);
+        userProperties.value = response.data.filter(property => property.user_id === loggedInUserId.value);
       } catch (error) {
         console.error('Erro ao buscar propriedades do usuário:', error);
       }
-    },
-    async fetchLoggedInUserId() {
+    };
+
+    const fetchLoggedInUserId = async () => {
       const token = this.$q.cookies.get('_myapp_token');
-      // console.log(token);
       try {
         var page = 'http://localhost:8000/api/user';
         const response = await axios.get(page, {
@@ -65,13 +60,31 @@ export default {
             'Content-Type': 'application/json'
           }
         });
-        this.loggedInUserId = response.data.id;
-        this.fetchUserProperties(); // Após obter o ID do usuário logado, buscar suas propriedades
+        loggedInUserId.value = response.data.id;
+        fetchUserProperties(); // Após obter o ID do usuário logado, buscar suas propriedades
       } catch (error) {
         console.error('Erro ao buscar o ID do usuário logado', error);
       }
-    }
-  },
+    };
+
+    onMounted(() => {
+      fetchLoggedInUserId();
+    });
+
+    const goToProperty = (id) => {
+      // Implemente a navegação para a página da propriedade com o ID fornecido
+    };
+
+    const goToEditProperty = (id) => {
+      // Implemente a navegação para a página de edição da propriedade com o ID fornecido
+    };
+
+    return {
+      userProperties,
+      goToProperty,
+      goToEditProperty
+    };
+  }
 };
 </script>
 

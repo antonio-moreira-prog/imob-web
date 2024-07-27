@@ -68,3 +68,4 @@ export default {
   background: #010326;
 }
 </style>
+./CarouselSlide.vue

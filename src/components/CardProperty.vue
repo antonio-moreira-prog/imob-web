@@ -1,6 +1,6 @@
 <template>
-  <div class="q-pa-md q-gutter-md row items-start justify-center justify-sm-start" >
-    <q-card  class="my-card col-xs-12 col-sm-6 col-md-4" flat bordered  v-for="property in properties" :key="property.id" >
+  <div class="q-pa-md q-gutter-md row items-start justify-center justify-sm-start ">
+    <q-card  class="my-card col-xs-12 col-sm-6 col-md-4 bg-custom" flat bordered  v-for="property in properties" :key="property.id" >
       <q-img src="https://images.pexels.com/photos/1571468/pexels-photo-1571468.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
 
       <q-card-section>
@@ -54,7 +54,12 @@ export default {
 
 <style scoped>
 .bg-brand {
-  background: #010326;
+  background: #1b9468;
+}
+.bg-custom{
+  background: #29263c;
+  color: white;
+  border-radius: 10px;
 }
 .min-height-card {
   min-height: 900px;

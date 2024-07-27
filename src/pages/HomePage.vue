@@ -3,18 +3,18 @@
     <AcessAreaHeader />
     <q-page-container>
       <div>
-        <CardList />
+        <CardProperty  />xwxw
       </div>
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
-import CardList from "../components/CardProperty.vue";
+import CardProperty from "../components/CardProperty.vue";
 import AcessAreaHeader from "../components/AcessAreaHeader.vue";
 export default {
   components: {
-    CardList,
+    CardProperty,
     AcessAreaHeader,
   },
   methods: {

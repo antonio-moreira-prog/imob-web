@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header elevated class="bg-green-custom">
       <q-toolbar>
         <q-btn
           flat
@@ -52,7 +52,7 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      class="bg-primary text-white"
+      class="bg-green-custom text-white"
     >
       <q-list>
         <q-item to="/dashboard" active-class="q-item-no-link-highlighting">
@@ -296,6 +296,9 @@ export default defineComponent({
   70% {
     transform: scale(1);
   }
-}
 
+}
+.bg-green-custom{
+    background: #3f259e;
+  }
 </style>

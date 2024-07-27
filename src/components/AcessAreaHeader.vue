@@ -1,6 +1,9 @@
 <template>
   <q-header>
     <q-toolbar>
+      <div>
+        <q-toolbar-title class="q-ml-auto q-mr-sm">IMOB</q-toolbar-title>
+      </div>
       <div class="q-ml-auto q-mr-sm">
         <q-btn style="border-radius: 8px;" @click="$router.push('/login')" color="brand">Área de acesso</q-btn>
       </div>
